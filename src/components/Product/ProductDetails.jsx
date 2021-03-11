@@ -25,6 +25,9 @@ const ProductDetails = () => {
               <ProductSize availableSizes={item.availableSizes} />
               <p>Category: {item.category}</p>
               <p>Description: {item.description}</p>
+              <div className="product__below--count">
+                
+              </div>
               <div className="product__below--btn">
                 <Link to="/product">Continue Shopping</Link>
                 <Link

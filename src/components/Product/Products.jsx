@@ -1,14 +1,23 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { ProductContext } from "../../contexts/ProductContext";
 import "../../css/Products.scss";
 import Filter from "../Filter";
 import ProductList from "./ProductList";
 const Products = () => {
+  const [isSearch, setIsSearch] = useState(false);
+  const { products, searchProduct, handleSearchSubmit } = useContext(
+    ProductContext
+  );
+  const handleSubmit = (searchSubmit) => {
+    searchSubmit ? setIsSearch(true) : setIsSearch(false)
+    handleSearchSubmit(searchSubmit);
+  };
+  console.log(isSearch)
   return (
     <main>
-      <Filter />
+      <Filter products={isSearch ? searchProduct : products} handleSubmit={handleSubmit} />
       <div className="product__container">
-        <ProductList />
+        <ProductList products={isSearch ? searchProduct : products} />
       </div>
     </main>
   );

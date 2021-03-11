@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Admin from "../components/Admin";
 import Cart from "../components/Cart";
 import Header from "../components/Header";
 import Home from "../components/Home";
@@ -26,6 +27,9 @@ const HomePage = () => {
               </Route>
               <Route exact path="/product/:id">
                 <ProductDetails />
+              </Route>
+              <Route exact path="/admin">
+                <Admin />
               </Route>
             </Switch>
           </Router>

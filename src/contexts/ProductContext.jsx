@@ -8,7 +8,13 @@ const ProductContextProvider = ({ children }) => {
   const [products, setProducts] = useState(data.products);
   const [size, setSize] = useState("");
   const [sort, setSort] = useState("");
-  const [cartItems, setCartItems] = useState([]);
+  const [category, setCategory] = useState("");
+  const [cartItems, setCartItems] = useState(
+    localStorage.getItem("cartItems")
+      ? JSON.parse(localStorage.getItem("cartItems"))
+      : []
+  );
+  const [searchProduct, setSearchProduct] = useState([]);
   const getProducts = async () => {
     try {
       const response = await axios.get("http://localhost:3000/products");
@@ -52,15 +58,17 @@ const ProductContextProvider = ({ children }) => {
       );
     }
   };
-  const handleRemoveProduct = id => {
+  const handleRemoveProduct = (id) => {
     const currentProduct = cartItems.find((x) => x._id === id);
-    const cartValue = [...cartItems]
-    if(currentProduct){
-      setCartItems(
-        cartValue.filter(item => item._id !== id)
-      );
+    const cartValue = [...cartItems];
+    if (currentProduct) {
+      setCartItems(cartValue.filter((item) => item._id !== id));
     }
-  }
+    localStorage.setItem(
+      "cartItems",
+      JSON.stringify(cartValue.filter((item) => item._id !== id))
+    );
+  };
   const handleAddToCart = (productValue) => {
     const cartValues = [...cartItems];
     const alreadyInCart = cartItems.every((item) => {
@@ -76,9 +84,9 @@ const ProductContextProvider = ({ children }) => {
       alert(cartName + " has been in your cart!");
     }
     setCartItems(cartValues);
+    localStorage.setItem("cartItems", JSON.stringify(cartValues));
   };
   const handleFilterProducts = (event) => {
-    console.log(event.target.value);
     if (event.target.value === "") {
       return;
     } else if (event.target.value === "All") {
@@ -113,18 +121,57 @@ const ProductContextProvider = ({ children }) => {
     );
     setProducts(newProductList);
   };
-  console.log(products);
+  const handleSortCategory = (event) => {
+    const categoryValue = event.target.value;
+    if (categoryValue === "") {
+      return;
+    } else if (categoryValue === "All") {
+      setCategory(categoryValue);
+      setProducts(data.products);
+    } else if (categoryValue === "Trousers") {
+      setCategory(categoryValue);
+      setProducts(
+        data.products.filter((product) => product.category === categoryValue)
+      );
+    } else if (categoryValue === "Coats") {
+      setCategory(categoryValue);
+      setProducts(
+        data.products.filter((product) => product.category === categoryValue)
+      );
+    } else if (categoryValue === "T-Shirts") {
+      setCategory(categoryValue);
+      setProducts(
+        data.products.filter((product) => product.category === categoryValue)
+      );
+    } else {
+      setCategory(categoryValue);
+      setProducts(
+        data.products.filter((product) => product.category === categoryValue)
+      );
+    }
+  };
+  const handleSearchSubmit = (search) => {
+    const searchValue = data.products.filter(
+      (product) => product.title === search
+    );
+    setSearchProduct(searchValue);
+  };
+  console.log(searchProduct);
   const productContextData = {
     products,
     size,
     sort,
+    category,
     cartItems,
+    searchProduct,
     handleSortProducts,
     handleFilterProducts,
+    handleSortCategory,
     handleAddToCart,
     handleAddClick,
     handleRemoveClick,
-    handleRemoveProduct
+    handleRemoveProduct,
+    handleSearchSubmit,
   };
   return (
     <ProductContext.Provider value={productContextData}>
