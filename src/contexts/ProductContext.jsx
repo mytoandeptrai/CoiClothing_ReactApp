@@ -1,11 +1,12 @@
 import React, { createContext, useState, useEffect } from "react";
 import data from "../data/data.json";
 import axios from "axios";
+import formatNumber from "../util2";
 export const ProductContext = createContext();
 
 const ProductContextProvider = ({ children }) => {
   //state
-  const [products, setProducts] = useState(data.products);
+  const [products, setProducts] = useState([]);
   const [size, setSize] = useState("");
   const [sort, setSort] = useState("");
   const [category, setCategory] = useState("");
@@ -23,10 +24,11 @@ const ProductContextProvider = ({ children }) => {
       console.log(error.message);
     }
   };
-  // useEffect(() => {
-  //   getProducts();
-  // }, []);
+  useEffect(() => {
+    getProducts();
+  }, []);
   const handleAddClick = (productValue) => {
+    console.log(productValue);
     const currentProduct = cartItems.find((x) => x._id === productValue._id);
     if (currentProduct) {
       setCartItems(
@@ -80,12 +82,39 @@ const ProductContextProvider = ({ children }) => {
         count: 1,
       });
     } else {
-      const cartName = cartItems.map((item) => item.title);
-      alert(cartName + " has been in your cart!");
+      const cartName = cartItems.filter((item) => item._id === productValue._id);
+      console.log('cartName', cartName)
+      alert(cartName[0].title + " has been in your cart!");
     }
     setCartItems(cartValues);
     localStorage.setItem("cartItems", JSON.stringify(cartValues));
   };
+  const handleAddToCartFromDetails = (productValue) => {
+    if (productValue.count === 0 || productValue.size === '') {
+      alert("You have to enter your number of product");
+    } else {
+      const currentCartItem = products.filter(
+        (x) => x._id === productValue._id
+      );
+      const cartValues = [...cartItems];
+      const alreadyInCart = cartItems.every((item) => {
+        return item._id !== productValue._id;
+      });
+      const newCartItem = {
+        ...currentCartItem[0],
+        ...productValue,
+        count: formatNumber(productValue.count),
+      };
+      if (alreadyInCart) {
+        cartValues.push(newCartItem);
+      } else {
+        const cartName = cartItems.map((item) => item.title);
+        alert(cartName + " has been in your cart!");
+      }
+      setCartItems(cartValues);
+    }
+  };
+
   const handleFilterProducts = (event) => {
     if (event.target.value === "") {
       return;
@@ -156,7 +185,6 @@ const ProductContextProvider = ({ children }) => {
     );
     setSearchProduct(searchValue);
   };
-  console.log(searchProduct);
   const productContextData = {
     products,
     size,
@@ -168,6 +196,7 @@ const ProductContextProvider = ({ children }) => {
     handleFilterProducts,
     handleSortCategory,
     handleAddToCart,
+    handleAddToCartFromDetails,
     handleAddClick,
     handleRemoveClick,
     handleRemoveProduct,

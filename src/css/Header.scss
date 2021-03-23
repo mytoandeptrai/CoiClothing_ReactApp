@@ -4,6 +4,7 @@ header {
     justify-content: space-around;
     align-items: center;
     overflow: hidden;
+    border: 1px solid black;
     .header__menu {
         cursor: pointer;
         display: none;
@@ -17,6 +18,8 @@ header {
     }
     .header__navbar {
         display: flex;
+        justify-content: center;
+        align-items: center;
         ul {
             li {
                 list-style: none;
@@ -43,7 +46,7 @@ header {
             align-items: center;
             span {
                 position: absolute;
-                top: 0px;
+                top: -15px;
                 right: -10px;
                 background: crimson;
                 font-size: 10px;

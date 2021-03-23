@@ -1,11 +1,11 @@
-import React, { useContext, useState } from "react";
-import { ProductContext } from "../../contexts/ProductContext";
-import { Result, Button } from "antd";
-import { Link } from "react-router-dom";
-import "../../css/Cart.scss";
+import { Button, Result } from "antd";
+import React, { useContext } from "react";
 import Fade from "react-reveal/Fade";
+import { Link } from "react-router-dom";
+import { ProductContext } from "../../contexts/ProductContext";
+import "../../css/Cart.scss";
 import formatCurrency from "../../util";
-import Proceed from "../Proceed";
+
 const Cart = () => {
   const {
     cartItems,
@@ -13,8 +13,6 @@ const Cart = () => {
     handleRemoveClick,
     handleRemoveProduct,
   } = useContext(ProductContext);
-  const [isProceed, setIsProceed] = useState(false);
-  const [isCheckOut, setIsCheckOut] = useState(false);
   const itemPrice = cartItems.reduce((a, c) => a + c.price * c.count, 0);
   const taxPrice = itemPrice * 0.1;
   const taxPrices = taxPrice;
@@ -38,99 +36,95 @@ const Cart = () => {
           </div>
         ) : (
           <div>
-            {isProceed ? (
-              <Proceed setIsProceed={setIsProceed} />
-            ) : (
-              <Fade left cascade={true}>
-                <div className="cart__container--table">
-                  You have {cartItems.length} in the cart{" "}
-                  <table className="styled-table">
-                    <thead>
-                      <tr>
-                        <th>Product</th>
-                        <th>Title</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th></th>
-                        <th></th>
-                        <th>Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {cartItems.map((item) => (
-                        <tr key={item._id}>
-                          <td>
-                            <div className="img">
-                              <img src={item.image} alt={item.title} />
-                            </div>
-                          </td>
-                          <td>{item.title}</td>
-                          <td>{formatCurrency(item.price)}</td>
-                          <td>{item.count}</td>
-                          <td>
-                            <div className="table-btn">
-                              <button
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleAddClick(item)}
-                              >
-                                +
-                              </button>
-                              <button
-                                style={{ cursor: "pointer" }}
-                                onClick={() => handleRemoveClick(item)}
-                              >
-                                -
-                              </button>
-                            </div>
-                          </td>
-                          <td style={{ cursor: "pointer" }}>
-                            <img
-                              src="https://img.icons8.com/material-rounded/24/000000/filled-trash.png"
-                              alt="bin"
-                              onClick={() => handleRemoveProduct(item._id)}
-                            />
-                          </td>
-                          <td>{formatCurrency(item.price * item.count)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                    <tfoot>
-                      {cartItems.length !== 0 && (
-                        <tr>
-                          <td>
-                            <div>
-                              Total of Products: {formatCurrency(itemPrice)}
-                            </div>
-                          </td>
-                          <td>
-                            <div>Tax: {formatCurrency(taxPrices)}</div>
-                          </td>
-                          <td>
-                            <div>
-                              Shipping Price: {formatCurrency(shippingPrice)}
-                            </div>
-                          </td>
-                          <td>
-                            <div>Total: {formatCurrency(totalPrice)}</div>
-                          </td>
-                          <td>
+            <Fade left cascade={true}>
+              <div className="cart__container--table">
+                You have {cartItems.length} in the cart{" "}
+                <table className="styled-table">
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Title</th>
+                      <th>Price</th>
+                      <th>Quantity</th>
+                      <th>Size</th>
+                      <th></th>
+                      <th></th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cartItems.map((item) => (
+                      <tr key={item._id}>
+                        <td>
+                          <div className="img">
+                            <img src={item.image} alt={item.title} />
+                          </div>
+                        </td>
+                        <td>{item.title}</td>
+                        <td>{formatCurrency(item.price)}</td>
+                        <td>{item.count}</td>
+                        <td>{item.size}</td>
+                        <td>
+                          <div className="table-btn">
                             <button
-                              className="button primary"
-                              onClick={() => setIsProceed(!isProceed)}
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleAddClick(item)}
                             >
-                              Proceed
+                              +
                             </button>
-                          </td>
-                          <td>
-                            <button className="button primary">ClearAll</button>
-                          </td>
-                        </tr>
-                      )}
-                    </tfoot>
-                  </table>
-                </div>
-              </Fade>
-            )}
+                            <button
+                              style={{ cursor: "pointer" }}
+                              onClick={() => handleRemoveClick(item)}
+                            >
+                              -
+                            </button>
+                          </div>
+                        </td>
+                        <td style={{ cursor: "pointer" }}>
+                          <img
+                            src="https://img.icons8.com/material-rounded/24/000000/filled-trash.png"
+                            alt="bin"
+                            onClick={() => handleRemoveProduct(item._id)}
+                          />
+                        </td>
+                        <td>{formatCurrency(item.price * item.count)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <tfoot>
+                    {cartItems.length !== 0 && (
+                      <tr>
+                        <td>
+                          <div>
+                            Total of Products: {formatCurrency(itemPrice)}
+                          </div>
+                        </td>
+                        <td>
+                          <div>Tax: {formatCurrency(taxPrices)}</div>
+                        </td>
+                        <td>
+                          <div>
+                            Shipping Price: {formatCurrency(shippingPrice)}
+                          </div>
+                        </td>
+                        <td>
+                          <div>Total: {formatCurrency(totalPrice)}</div>
+                        </td>
+                        <td>
+                          <button className="button primary">
+                            <Link to="/proceed">Proceed</Link>
+                          </button>
+                        </td>
+                        <td>
+                          <button className="button primary">ClearAll</button>
+                        </td>
+                      </tr>
+                    )}
+                  </tfoot>
+                </table>
+              </div>
+            </Fade>
+            {/* )} */}
           </div>
         )}
       </div>

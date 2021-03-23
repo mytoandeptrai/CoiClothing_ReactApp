@@ -1,13 +1,14 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { ProductContext } from "../../contexts/ProductContext";
 import { Link } from "react-router-dom";
 import Menu from "../../svg/bars-solid.svg";
 import Close from "../../svg/times-solid.svg";
 import CartIcon from "../../svg/shopping-cart-solid.svg";
 import "../../css/Header.scss";
-import logo from '../../assets/image/logo.png';
+import logo from "../../assets/image/logo.png";
 const Header = () => {
   const { cartItems } = useContext(ProductContext);
+
   return (
     <header>
       <div className="header__menu">
@@ -16,13 +17,13 @@ const Header = () => {
       <div className="header__logo">
         <h1>
           <Link to="/product">
-            <img src={logo} alt={logo} width="100"/>
+            <img src={logo} alt={logo} width="100" />
           </Link>
         </h1>
       </div>
       <nav className="header__navbar">
         <ul>
-        <li>
+          <li>
             <Link to="/">Home</Link>
           </li>
           <li>

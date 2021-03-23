@@ -1,15 +1,35 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { ProductContext } from "../../contexts/ProductContext";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
-import ProductSize from "./ProductSize";
-import formatCurrency from "../../util";
 import "../../css/ProductDetails.scss";
+import formatCurrency from "../../util";
+import formatNumber from "../../util2";
+import ProductDetailsCount from "./ProductDetailsCount";
+import ProductSize from "./ProductSize";
 const ProductDetails = () => {
-  const { products, handleAddToCart } = useContext(ProductContext);
+  const { products, handleAddToCartFromDetails } = useContext(ProductContext);
   const { id } = useParams();
-  console.log(id);
   const newProducts = products.filter((newProduct) => newProduct._id === id);
+  const productId = newProducts.map((product) => product._id);
+  const [formValue, setFormValue] = useState({
+    count: 0,
+    size: "",
+    _id: "",
+  });
+
+  const handleChange = (e) => {
+    setFormValue({
+      ...formValue,
+      [e.target.name]: e.target.value,
+      _id: productId[0],
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleAddToCartFromDetails(formValue);
+  };
+
   return (
     <>
       {newProducts.map((item) => (
@@ -22,22 +42,32 @@ const ProductDetails = () => {
             </div>
             <div className="product__content--below">
               AvailableSizes:{" "}
-              <ProductSize availableSizes={item.availableSizes} />
+              {item.availableSizes.map((item, index) => (
+                <div className="availableSizes__Color" key={index}>
+                  <ProductSize
+                    size={formValue.size}
+                    handleChange={handleChange}
+                    item={item}
+                  />
+                </div>
+              ))}
               <p>Category: {item.category}</p>
               <p>Description: {item.description}</p>
-              <div className="product__below--count">
-                
-              </div>
-              <div className="product__below--btn">
-                <Link to="/product">Continue Shopping</Link>
-                <Link
-                  to="/product"
-                  className="cart"
-                  onClick={() => handleAddToCart(item)}
-                >
-                  Add to cart
-                </Link>
-              </div>
+              <form onSubmit={handleSubmit}>
+                <div className="product__below--count">
+                  <ProductDetailsCount
+                    item={item}
+                    count={formValue.count}
+                    handleChange={handleChange}
+                  />
+                </div>
+                <div className="product__below--btn">
+                  <Link to="/product">Continue Shopping</Link>
+                  <button className="cart" onClick={handleSubmit}>
+                    Add to cart
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
