@@ -3,7 +3,7 @@ import { ProductContext } from "../../contexts/ProductContext";
 import formatCurrency from "../../util";
 
 const ManageProduct = () => {
-  const { products } = useContext(ProductContext);
+  const { products,handleRemoveProductFromAdmin } = useContext(ProductContext);
   return (
     <div className="productManagement__wrapper--content">
       <table>
@@ -36,7 +36,7 @@ const ManageProduct = () => {
               </td>
               <td>
                 <ul>
-                  <li>Delete</li>
+                  <li onClick={() => handleRemoveProductFromAdmin(product._id)}>Delete</li>
                 </ul>
               </td>
             </tr>

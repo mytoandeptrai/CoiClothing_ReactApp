@@ -19,7 +19,7 @@ const PopupSuccessful = ({ isPopup, setIsPopup }) => {
               width="150px"
               height="150px"
             />
-            <h2>Awesome</h2>
+            <h2>Thanks for your order</h2>
             <p>
               Your order has been confirmed. <br />
               Check your email for details !

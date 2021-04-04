@@ -15,7 +15,7 @@ const Filter = ({ handleSubmit, products }) => {
   const handleSearch = (e) => {
     e.preventDefault();
     handleSubmit(search);
-    setSearch("");
+    setSearch("")
   };
   const style = {
     display: "flex",

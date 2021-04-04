@@ -1,6 +1,6 @@
-import React, { createContext, useState, useEffect } from "react";
-import data from "../data/data.json";
 import axios from "axios";
+import React, { createContext, useEffect, useState } from "react";
+import data from "../data/data.json";
 import formatNumber from "../util2";
 export const ProductContext = createContext();
 
@@ -9,13 +9,22 @@ const ProductContextProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [size, setSize] = useState("");
   const [sort, setSort] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("");
   const [cartItems, setCartItems] = useState(
     localStorage.getItem("cartItems")
       ? JSON.parse(localStorage.getItem("cartItems"))
       : []
   );
-  const [searchProduct, setSearchProduct] = useState([]);
+  const productFilter = (value) => {
+    return value.filter((val) => {
+      if (searchTerm === "") {
+        return val;
+      } else if (val.title.toLowerCase().includes(searchTerm.toLowerCase())) {
+        return val;
+      }
+    });
+  };
   const getProducts = async () => {
     try {
       const response = await axios.get("http://localhost:3000/products");
@@ -60,6 +69,19 @@ const ProductContextProvider = ({ children }) => {
       );
     }
   };
+  const handleRemoveProductFromAdmin = async (id) => {
+    try {
+      // await axios.delete(`http://localhost:3000/products/${id}`);
+      const productValue = products.filter((product) => product._id !== id);
+      setProducts(productValue);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  const handleClearAll = () => {
+    localStorage.removeItem("cartItems");
+    setCartItems([]);
+  };
   const handleRemoveProduct = (id) => {
     const currentProduct = cartItems.find((x) => x._id === id);
     const cartValue = [...cartItems];
@@ -80,17 +102,20 @@ const ProductContextProvider = ({ children }) => {
       cartValues.push({
         ...productValue,
         count: 1,
+        size: "L",
       });
     } else {
-      const cartName = cartItems.filter((item) => item._id === productValue._id);
-      console.log('cartName', cartName)
+      const cartName = cartItems.filter(
+        (item) => item._id === productValue._id
+      );
+      console.log("cartName", cartName);
       alert(cartName[0].title + " has been in your cart!");
     }
     setCartItems(cartValues);
     localStorage.setItem("cartItems", JSON.stringify(cartValues));
   };
   const handleAddToCartFromDetails = (productValue) => {
-    if (productValue.count === 0 || productValue.size === '') {
+    if (productValue.count === 0 || productValue.size === "") {
       alert("You have to enter your number of product");
     } else {
       const currentCartItem = products.filter(
@@ -180,18 +205,16 @@ const ProductContextProvider = ({ children }) => {
     }
   };
   const handleSearchSubmit = (search) => {
-    const searchValue = data.products.filter(
-      (product) => product.title === search
-    );
-    setSearchProduct(searchValue);
+    setSearchTerm(search);
   };
+
   const productContextData = {
     products,
     size,
     sort,
     category,
     cartItems,
-    searchProduct,
+    productFilter,
     handleSortProducts,
     handleFilterProducts,
     handleSortCategory,
@@ -201,6 +224,8 @@ const ProductContextProvider = ({ children }) => {
     handleRemoveClick,
     handleRemoveProduct,
     handleSearchSubmit,
+    handleRemoveProductFromAdmin,
+    handleClearAll,
   };
   return (
     <ProductContext.Provider value={productContextData}>

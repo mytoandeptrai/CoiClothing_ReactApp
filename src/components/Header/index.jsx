@@ -45,7 +45,8 @@ const Header = () => {
         <div className="header__nav--cart">
           <span>{cartItems.length}</span>
           <Link to="/cart">
-            <img src={CartIcon} alt="pic3" width="20" />
+            {/* <img src={CartIcon} alt="pic3" width="20" /> */}
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/shopping-cart.png" alt="pic3" width="20"/>
           </Link>
         </div>
       </nav>

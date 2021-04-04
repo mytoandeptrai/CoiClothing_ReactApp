@@ -7,7 +7,6 @@ import Fade from "react-reveal/Fade";
 const Home = () => {
   const { products } = useContext(ProductContext);
   const topProducts = products.slice(0, 6);
-  console.log(topProducts);
   return (
     <>
       <Fade bottom cascade={true}>
@@ -15,13 +14,13 @@ const Home = () => {
           <div className="home__container--above">
             <h1>WELCOME TO COI CLOTHING </h1>
             <h3 className="lead">
-              Mục đích của chúng tôi là đưa đến những sản phẩm với chất lượng
-              tốt nhất cho khách hàng và khiến họ hạnh phúc !
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit,
+              vitae!
             </h3>
           </div>
           <div className="home__container--below">
             <div className="home__below--title">
-              <h1>Top 6 products</h1>
+              <h1>Top 6 Flagship-Shirts</h1>
             </div>
             <div className="home__below--content">
               {topProducts.map((product) => (

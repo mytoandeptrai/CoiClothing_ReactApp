@@ -6,7 +6,7 @@ import "../../css/Proceed.scss";
 import PopupSuccessful from "../Popups/PopupSuccessful";
 import Payment from "./Payment";
 import TextField from "./TextField";
-
+import { Link } from "react-router-dom";
 const Proceed = ({ setIsProceed }) => {
   // let history = useHistory();
   const [isPopup, setIsPopup] = useState(false);
@@ -145,8 +145,8 @@ const Proceed = ({ setIsProceed }) => {
                         {formikProps.isSubmitting ? "Loading..." : "Purchase"}
                       </button>
                       <ul>
-                        <li onClick={() => setIsProceed(false)}>
-                          Back to cart !
+                        <li>
+                        <Link to="/cart">Back to cart !</Link>
                         </li>
                       </ul>
                     </div>
