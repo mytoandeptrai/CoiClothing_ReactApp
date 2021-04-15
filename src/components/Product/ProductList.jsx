@@ -8,7 +8,14 @@ import { Result, Button } from "antd";
 import ReactPaginate from "react-paginate";
 import "../../css/Pagination.scss";
 const ProductList = ({ products }) => {
-  const { handleAddToCart } = useContext(ProductContext);
+  const { handleAddToCart, user } = useContext(ProductContext);
+  const handleAddClick = (product) => {
+    if (user) {
+      handleAddToCart(product);
+    } else {
+      alert("You need to login to do that !");
+    }
+  };
   const [pageNumber, setPageNumber] = useState(0);
   const productPerPage = 10;
   const pageVisited = pageNumber * productPerPage;
@@ -28,51 +35,48 @@ const ProductList = ({ products }) => {
               <span>{formatCurrency(product.price)}</span>
               <p>{formatCurrency(product.discount)}</p>
             </div>
-            <button onClick={() => handleAddToCart(product)}>
-              Add to cart
-            </button>
+            <button onClick={() => handleAddClick(product)}>Add to cart</button>
           </div>
         </div>
       </li>
     ));
   const pageCount = Math.ceil(products.length / productPerPage);
   const changePage = ({ selected }) => {
-    console.log(selected);
     setPageNumber(selected);
   };
+  console.log(products);
   return (
     <>
-      {products ? (
-        <Fade bottom cascade={true}>
-          <div className="product__list-container">
-            <ul className="products__list">{displayProducts}</ul>
-            <ReactPaginate
-              previousLabel={"Previous"}
-              nextLabel={"Next"}
-              pageCount={pageCount}
-              onPageChange={changePage}
-              containerClassName={"pagination"}
-              previousLinkClassName={"previousBtn"}
-              nextLinkClassName={"nextBtn"}
-              disabledClassName={"paginationDisabled"}
-              activeClassName={"paginationActive"}
-            />
-          </div>
-        </Fade>
-      ) : (
-        <>
-          <Result
-            status="warning"
-            title="There are some problems with your operation."
-            extra={
-              <Button type="primary" key="console">
-                Go Console
-              </Button>
-            }
-          />
-          ,
-        </>
-      )}
+      <Fade bottom cascade={true}>
+        <div className="product__list-container">
+          <ul className="products__list">
+            {products.length === 0 ? (
+              <div className="product__list--error">
+                <Result
+                  status="500"
+                  title="500"
+                  subTitle="Sorry, There is no clothes here!."
+                />
+              </div>
+            ) : (
+              <>
+                {displayProducts}
+                <ReactPaginate
+                  previousLabel={"Previous"}
+                  nextLabel={"Next"}
+                  pageCount={pageCount}
+                  onPageChange={changePage}
+                  containerClassName={products ? "pagination" : "displayNone"}
+                  previousLinkClassName={"previousBtn"}
+                  nextLinkClassName={"nextBtn"}
+                  disabledClassName={"paginationDisabled"}
+                  activeClassName={"paginationActive"}
+                />
+              </>
+            )}
+          </ul>
+        </div>
+      </Fade>
     </>
   );
 };

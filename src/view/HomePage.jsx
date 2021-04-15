@@ -2,7 +2,10 @@ import React, { Fragment } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import About from "../components/About";
 import Admin from "../components/Admin";
+import SignIn from "../components/Authentication/SignIn/SignIn";
+import SignUp from "../components/Authentication/SignUp/SignUp";
 import Cart from "../components/Cart";
+import Checkout from "../components/CheckOut/Checkout";
 import Contact from "../components/Contact";
 import Header from "../components/Header";
 import Home from "../components/Home";
@@ -29,7 +32,7 @@ const HomePage = () => {
                 <Cart />
               </Route>
               <Route exact path="/proceed">
-                <Proceed />
+                <Checkout />
               </Route>
               <Route exact path="/contact">
                 <Contact />
@@ -42,6 +45,12 @@ const HomePage = () => {
               </Route>
               <Route exact path="/about">
                 <About />
+              </Route>
+              <Route exact path="/login">
+                <SignIn />
+              </Route>
+              <Route exact path="/register">
+                <SignUp />
               </Route>
             </Switch>
           </Router>

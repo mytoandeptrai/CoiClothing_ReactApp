@@ -7,7 +7,9 @@ import formatNumber from "../../util2";
 import ProductDetailsCount from "./ProductDetailsCount";
 import ProductSize from "./ProductSize";
 const ProductDetails = () => {
-  const { products, handleAddToCartFromDetails } = useContext(ProductContext);
+  const { products, handleAddToCartFromDetails, user } = useContext(
+    ProductContext
+  );
   const { id } = useParams();
   const newProducts = products.filter((newProduct) => newProduct._id === id);
   const productId = newProducts.map((product) => product._id);
@@ -27,7 +29,16 @@ const ProductDetails = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleAddToCartFromDetails(formValue);
+    if (user) {
+      handleAddToCartFromDetails(formValue);
+      setFormValue({
+        count: 0,
+        size: "",
+        _id: "",
+      });
+    } else {
+      alert("You must to login to do that !");
+    }
   };
 
   return (

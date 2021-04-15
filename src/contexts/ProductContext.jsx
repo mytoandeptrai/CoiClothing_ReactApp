@@ -2,14 +2,17 @@ import axios from "axios";
 import React, { createContext, useEffect, useState } from "react";
 import data from "../data/data.json";
 import formatNumber from "../util2";
+import fire from "../firebase/config/index";
 export const ProductContext = createContext();
 
 const ProductContextProvider = ({ children }) => {
   //state
+  const [user, setUser] = useState("");
   const [products, setProducts] = useState([]);
   const [size, setSize] = useState("");
   const [sort, setSort] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [totalPrice, setTotalPrice] = useState("");
   const [category, setCategory] = useState("");
   const [cartItems, setCartItems] = useState(
     localStorage.getItem("cartItems")
@@ -33,9 +36,26 @@ const ProductContextProvider = ({ children }) => {
       console.log(error.message);
     }
   };
+  const authListener = () => {
+    fire.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser("");
+      }
+    });
+  };
+
+  useEffect(() => {
+    authListener();
+    return () => {
+      setUser("");
+    };
+  }, []);
   useEffect(() => {
     getProducts();
   }, []);
+
   const handleAddClick = (productValue) => {
     console.log(productValue);
     const currentProduct = cartItems.find((x) => x._id === productValue._id);
@@ -115,8 +135,10 @@ const ProductContextProvider = ({ children }) => {
     localStorage.setItem("cartItems", JSON.stringify(cartValues));
   };
   const handleAddToCartFromDetails = (productValue) => {
-    if (productValue.count === 0 || productValue.size === "") {
+    if (productValue.count === 0) {
       alert("You have to enter your number of product");
+    } else if (productValue.size === "") {
+      alert("You have to choose your size of product before adding to cart");
     } else {
       const currentCartItem = products.filter(
         (x) => x._id === productValue._id
@@ -214,7 +236,10 @@ const ProductContextProvider = ({ children }) => {
     sort,
     category,
     cartItems,
+    user,
     productFilter,
+    totalPrice,
+    setTotalPrice,
     handleSortProducts,
     handleFilterProducts,
     handleSortCategory,

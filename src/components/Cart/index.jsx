@@ -14,6 +14,7 @@ const Cart = () => {
     handleRemoveClick,
     handleRemoveProduct,
     handleClearAll,
+    setTotalPrice,
   } = useContext(ProductContext);
   const itemPrice = cartItems.reduce((a, c) => a + c.price * c.count, 0);
   const taxPrice = itemPrice * 0.1;
@@ -133,7 +134,10 @@ const Cart = () => {
                           </button>
                         </td>
                         <td>
-                          <button className="button primary">
+                          <button
+                            className="button primary"
+                            onClick={() => setTotalPrice(totalPrice)}
+                          >
                             <Link to="/proceed">Proceed</Link>
                           </button>
                         </td>
