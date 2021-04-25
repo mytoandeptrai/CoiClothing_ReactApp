@@ -12,6 +12,7 @@ const Filter = ({ handleSubmit, products }) => {
     handleSortCategory,
     handleFilterProducts,
     handleSortProducts,
+    setIsFilter,
   } = useContext(ProductContext);
   const handleSearch = (e) => {
     e.preventDefault();
@@ -25,8 +26,10 @@ const Filter = ({ handleSubmit, products }) => {
       (el) => el.availableSizes.indexOf(e.target.value) >= 0
     )
     if(e.target.value === "All"){
+      setIsFilter(false);
       handleFilterProducts(productFilter);
     }else{
+      setIsFilter(true);
       handleFilterProducts(product);
     }
   }

@@ -19,6 +19,10 @@ const ProductContextProvider = ({ children }) => {
       ? JSON.parse(localStorage.getItem("cartItems"))
       : []
   );
+
+  const [productFiltered, setProductFiltered] = useState([]);
+  const [isFilter, setIsFilter] = useState(false);
+
   const productFilter = (value) => {
     return value.filter((val) => {
       if (searchTerm === "") {
@@ -164,7 +168,7 @@ const ProductContextProvider = ({ children }) => {
   };
 
   const handleFilterProducts = (product) => {
-    setProducts(product);
+    setProductFiltered(product);
   };
   const handleSortProducts = (event) => {
     const sortValue = event.target.value;
@@ -221,6 +225,8 @@ const ProductContextProvider = ({ children }) => {
 
   const productContextData = {
     products,
+    productFiltered,
+    isFilter,
     size,
     setSize,
     sort,
@@ -241,6 +247,7 @@ const ProductContextProvider = ({ children }) => {
     handleSearchSubmit,
     handleRemoveProductFromAdmin,
     handleClearAll,
+    setIsFilter,
   };
   return (
     <ProductContext.Provider value={productContextData}>
