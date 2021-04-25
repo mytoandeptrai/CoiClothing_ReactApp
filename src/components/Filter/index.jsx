@@ -6,6 +6,7 @@ const Filter = ({ handleSubmit, products }) => {
   const [search, setSearch] = useState("");
   const {
     size,
+    setSize,
     sort,
     category,
     handleSortCategory,
@@ -17,6 +18,18 @@ const Filter = ({ handleSubmit, products }) => {
     handleSubmit(search);
     setSearch("")
   };
+  const filterHandler = (e) => {
+    setSize(e.target.value);
+    const productFilter = [...products]
+    const product = productFilter.filter(
+      (el) => el.availableSizes.indexOf(e.target.value) >= 0
+    )
+    if(e.target.value === "All"){
+      handleFilterProducts(productFilter);
+    }else{
+      handleFilterProducts(product);
+    }
+  }
   const style = {
     display: "flex",
   };
@@ -52,7 +65,7 @@ const Filter = ({ handleSubmit, products }) => {
         </div>
         <div className="filter__content--size">
           Filter{" "}
-          <select value={size} onChange={handleFilterProducts}>
+          <select value={size} onChange={filterHandler}>
             <option value="All">All</option>
             <option value="XS">XS</option>
             <option value="S">S</option>

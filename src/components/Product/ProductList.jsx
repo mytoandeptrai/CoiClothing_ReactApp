@@ -44,7 +44,6 @@ const ProductList = ({ products }) => {
   const changePage = ({ selected }) => {
     setPageNumber(selected);
   };
-  console.log(products);
   return (
     <>
       <Fade bottom cascade={true}>

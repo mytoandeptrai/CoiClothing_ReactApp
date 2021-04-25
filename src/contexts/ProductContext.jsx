@@ -45,15 +45,16 @@ const ProductContextProvider = ({ children }) => {
       }
     });
   };
+  useEffect(() => {
+    getProducts();
+    console.log("dang changed");
+  }, []);
 
   useEffect(() => {
     authListener();
     return () => {
       setUser("");
     };
-  }, []);
-  useEffect(() => {
-    getProducts();
   }, []);
 
   const handleAddClick = (productValue) => {
@@ -162,23 +163,10 @@ const ProductContextProvider = ({ children }) => {
     }
   };
 
-  const handleFilterProducts = (event) => {
-    if (event.target.value === "") {
-      return;
-    } else if (event.target.value === "All") {
-      setSize(event.target.value);
-      setProducts(data.products);
-    } else {
-      setSize(event.target.value);
-      setProducts(
-        data.products.filter(
-          (product) => product.availableSizes.indexOf(event.target.value) >= 0
-        )
-      );
-    }
+  const handleFilterProducts = (product) => {
+    setProducts(product);
   };
   const handleSortProducts = (event) => {
-    console.log(event.target.value);
     const sortValue = event.target.value;
     setSort(sortValue);
     const newProductList = [...products];
@@ -199,11 +187,12 @@ const ProductContextProvider = ({ children }) => {
   };
   const handleSortCategory = (event) => {
     const categoryValue = event.target.value;
+    const productsFromDb = [...products];
     if (categoryValue === "") {
       return;
     } else if (categoryValue === "All") {
       setCategory(categoryValue);
-      setProducts(data.products);
+      setProducts(productsFromDb);
     } else if (categoryValue === "Trousers") {
       setCategory(categoryValue);
       setProducts(
@@ -233,6 +222,7 @@ const ProductContextProvider = ({ children }) => {
   const productContextData = {
     products,
     size,
+    setSize,
     sort,
     category,
     cartItems,
